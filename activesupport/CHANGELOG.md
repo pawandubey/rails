@@ -1,4 +1,21 @@
 ## Rails 5.1.2 (June 26, 2017) ##
+*   Fix a regression with division by a Duration object
+
+    Before:
+        rental_end = DateTime.parse('01-01-2017 12:45:00').utc.in_time_zone('Europe/Berlin')
+        rental_start = DateTime.parse('01-01-2017 12:00:00').utc.in_time_zone('Europe/Berlin')
+        (rental_end - rental_start) / 1.hour
+        => 2700.0 hours
+    
+    After:
+        rental_end = DateTime.parse('01-01-2017 12:45:00').utc.in_time_zone('Europe/Berlin')
+        rental_start = DateTime.parse('01-01-2017 12:00:00').utc.in_time_zone('Europe/Berlin')
+        (rental_end.to_f - rental_start.to_f) / 1.hour.to_f
+        => 0.75
+        
+    *Stuart Swindells*
+        
+*   Default `ActiveSupport::MessageEncryptor` to use AES 256 GCM encryption.
 
 *   Cache: Restore the `options = nil` argument for `LocalStore#clear`
     that was removed in 5.1.0. Restores compatibility with backends that
